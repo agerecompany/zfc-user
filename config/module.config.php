@@ -3,9 +3,15 @@ namespace Agere\User;
 
 return array(
     'controllers' => array(
-        'invokables' => array(
+        'aliases' => [
             'user' => Controller\UserController::class,
-        ),
+
+        ],
+        'factories' => [
+            Controller\UserController::class => Controller\Factory\UserControllerFactory::class,
+        ],
+        
+        
     ),
     'view_manager' => array(
         'template_map' => array(
@@ -34,10 +40,14 @@ return array(
         'aliases' => array(
             'UserService' => Service\UserService::class,
             'UserAuthentication' => Controller\Plugin\UserAuthentication::class,
-            'User' => Model\User::class,
+            'UsersRolesService' => Service\UsersRolesService::class,
+            'UserGrid' => Block\Grid\UserGrid::class, // only for GridFactory
         ),
         'invokables' => [
             Service\UserService::class => Service\UserService::class,
+            Service\UsersRolesService::class => Service\UsersRolesService::class,
+            Model\User::class => Model\User::class,
+            Model\UsersRoles::class => Model\UsersRoles::class,
         ],
         'factories' => array(
             Event\Authentication::class => Event\Factory\AuthenticationFactory::class,
@@ -68,6 +78,7 @@ return array(
                 },
         ),
     ),
+
     // Doctrine config
     'doctrine' => array(
         'driver' => array(
@@ -86,7 +97,7 @@ return array(
     ),
     // @link http://adam.lundrigan.ca/2012/07/quick-and-dirty-zf2-zend-navigation/
     // All navigation-related configuration is collected in the 'navigation' key
-    'navigation' => array(
+    /*'navigation' => array(
         // The DefaultNavigationFactory we configured in (1) uses 'default' as the sitemap key
         'default' => array(
             // And finally, here is where we define our page hierarchy
@@ -190,5 +201,5 @@ return array(
                 ),
             ),
         ),
-    ),
+    ),*/
 );

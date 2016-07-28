@@ -73,7 +73,7 @@ class UserHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
         return UserPlugin::getAccessMask($args, $assocDigit);
 	}
 
-	public static function parseAccessMask($args, $assocDigit = null) {
+	public static function parseAccessMask($args, $assocDigit = ['user', 'role', 'group']) {
 		return UserPlugin::parseAccessMask($args, $assocDigit);
 	}
 	

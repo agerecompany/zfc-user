@@ -1,6 +1,9 @@
 <?php
 namespace Agere\User\Controller;
 
+use Agere\User\Block\Grid\UserGrid;
+use Agere\User\Model\UsersRoles;
+use Agere\User\Service\UsersRolesService;
 use Zend\Mvc\Controller\AbstractActionController,
 	Zend\View\Model\ViewModel,
 	Zend\View\Model\JsonModel,
@@ -8,12 +11,24 @@ use Zend\Mvc\Controller\AbstractActionController,
 	Agere\Agere\File\Transfer\Adapter\Http,
 	Agere\Agere\File\Resize\Adapter\GbResize,
 	Agere\Agere\String\String as AgereString,
-	Agere\User\Form\User as UserForm,
 	Agere\User\Form\Login as LoginForm,
 	Agere\User\Form\ForgotPassword as ForgotPasswordForm,
 	Agere\User\Form\ChangePassword as ChangePasswordForm;
 
+use Agere\User\Model\User;
+use Agere\User\Form\UserForm;
+use Agere\Core\Service\ServiceManagerAwareTrait;
+use Agere\Core\Controller\DeleteActionAwareTrait;
+
+use Agere\Material\Block\Grid\MaterialGrid;
+use Agere\Material\Form\MaterialForm;
+
+
 class UserController extends AbstractActionController {
+
+	use ServiceManagerAwareTrait;
+
+	use DeleteActionAwareTrait;
 
 	public $serviceName = 'UserService';
 	public $sessionName = 'userIndex';
@@ -24,7 +39,74 @@ class UserController extends AbstractActionController {
 	public $limit = 36;
 
 
-	public function indexAction($action = 'index', $sessionNameFilters = '')
+	public function indexAction()
+	{
+		$sm = $this->getServiceManager();
+		//$users = $this->getService()->getRepository()->findByRoles(1);
+		$users = $this->getService()->getRepository()->getUsers();
+		/** @var UserGrid $userGrid */
+		$userGrid = $sm->get('UserGrid');
+		$userDataGrid = $userGrid->getDataGrid();
+		$userDataGrid->setDataSource($users);
+		$userDataGrid->render();
+		$userDataGridVm = $userDataGrid->getResponse();
+
+		return $userDataGridVm;
+	}
+
+	public function createAction()
+	{
+		return $viewModel = $this->editAction();
+	}
+
+	function editAction()
+	{
+		$request = $this->getRequest();
+		$route = $this->getEvent()->getRouteMatch();
+		$service = $this->getService();
+		$fm = $this->getServiceManager()->get('FormElementManager');
+		/** @var User $user */
+		$user= ($user = $service->find($id = (int) $route->getParam('id')))
+			? $user
+			: $service->getObjectModel();
+
+		/** @var UserForm $form */
+		$form = $fm->get(UserForm::class);
+		$form->bind($user);
+		if ($request->isPost()) {
+			$form->setData($request->getPost());
+			if ($form->isValid()) {
+				$this->getService()->saves($user);
+				$msg = 'Пользователь был успешно сохранен';
+				$this->flashMessenger()->addSuccessMessage($msg);
+
+				return $this->redirect()->toRoute('default', array (
+					'controller' => 'user',
+					'action'     => 'index',
+				));
+
+			} else {
+				$msg = 'Форма не валидна. Проверьте значение и внесите коррективы';
+				$this->flashMessenger()->addSuccessMessage($msg);
+			}
+		}
+
+		return new ViewModel([
+			'form' => $form,
+		]);
+	}
+
+	/**
+	 * @return MaterialService
+	 */
+	public function getService()
+	{
+		return $this->getServiceManager()->get('UserService');
+	}
+
+
+/*=================Old code =============================================*/
+	public function indexAction2($action = 'index', $sessionNameFilters = '')
 	{
 		$sessionNameFilters = ($sessionNameFilters != '') ? $sessionNameFilters : $this->sessionNameFilters;
 		$session = new SessionContainer($sessionNameFilters);
@@ -169,7 +251,7 @@ class UserController extends AbstractActionController {
 		return $viewModel->setTemplate("Agere/users/edit.phtml");
 	}
 
-	public function editAction()
+	public function editAction2()
 	{
 		$request = $this->getRequest();
 		$route = $this->getEvent()->getRouteMatch();
@@ -359,7 +441,7 @@ class UserController extends AbstractActionController {
 							
 							$accessEntities = new \Agere\Permission\Model\PermissionAccess();
 							$accessEntities->setPermissionId($pId);
-							$accessEntities->setRoleId($roleId);
+							$accessEntities->setMaskId($roleId);
 							$accessEntities->setAccess(4);
 							$accessEntities->setPermission($permission);
 							

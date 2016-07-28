@@ -36,6 +36,18 @@ class UserService extends DomainServiceAbstract
 	 */
 	protected $_fields;
 
+	public function saves(User $user)
+	{
+		$om = $this->getObjectManager();
+		if (!$om->contains($user)) {
+			$om->persist($user);
+		}
+		$om->flush();
+	}
+
+
+	/*=================Old code =============================================*/
+
 
 	/**
 	 * @return string

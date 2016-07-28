@@ -204,7 +204,6 @@ class Authentication
 		}
 
 		$allowed = [$this->_aclClass->isAllowed($role, 'all', $accessTotal)];
-
 		// Allowed session
 		if (isset($_SESSION['location'])) {
 			$target = $_SESSION['location']['controller'] . '/' . $_SESSION['location']['action'];
@@ -291,29 +290,23 @@ class Authentication
 		static $accessDefault = 6;
 
 		$sql = <<<SQL
-SELECT p.`target`, pa.`roleId`, pa.`access`
+SELECT p.`target`, pa.`maskId`, pa.`access`
 FROM `permission_access` pa
 LEFT JOIN `permission` p ON pa.`permissionId` = p.`id`
-WHERE p.`entityId` = 0 AND p.`parent` = 0
+WHERE p.`moduleId` = 0 AND p.`parent` = 0
 SQL;
 		$results = $dbAdapter->query($sql, $dbAdapter::QUERY_MODE_EXECUTE);
 		// making the roles array
-		// @todo Перемістити в БД і налаштовувати через адмінку
-		$this->roles['guest'][] = ['target' => 'soap-api/index', 'access' => $accessDefault];
-		$this->roles['guest'][] = ['target' => 'soap-api/get', 'access' => $accessDefault];
-		//$this->roles['guest'][] = ['target' => 'soap-api/post', 'access' => $accessDefault];
-
 		$this->roles['guest'][] = ['target' => 'user/login', 'access' => $accessDefault];
 		$this->roles['guest'][] = ['target' => 'user/forgot-password', 'access' => $accessDefault];
 		// Table roles to array
 
 		$resultRolesArray = $this->getResultRolesArray($dbAdapter);
-
 		foreach ($results as $result) {
-			// Parse roleId
-			$assocDigit = UserHelper::parseAccessMask($result['roleId']);
-			//\Zend\Debug\Debug::dump($assocDigit);
 
+			// Parse maskId
+			$assocDigit = UserHelper::parseAccessMask($result['maskId']); // помилка десь тут
+			//\Zend\Debug\Debug::dump([$result, $assocDigit]); die(__METHOD__);// локально зараз гляну
 			if ($assocDigit['field'] == 'role' && isset($resultRolesArray[$assocDigit['id']])) {
 				$this->roles[$resultRolesArray[$assocDigit['id']]['mnemo']][] = [
 					'target' => $result['target'],
@@ -321,8 +314,9 @@ SQL;
 				];
 			}
 		}
-		//die(__METHOD__);
+		//die();
 		//\Zend\Debug\Debug::dump($this->roles); die();
+		//die(__METHOD__);
 		return $this->roles;
 	}
 
@@ -338,6 +332,7 @@ SQL;
 			);
 
 			foreach ($resultRoles as $result) {
+				//\Zend\Debug\Debug::dump($resultRoles); die(__METHOD__);
 				if ($result['resource'] == 'all') {
 					$this->roles[$result['mnemo']][] = [
 						'target' => $result['resource'],
@@ -382,7 +377,7 @@ SQL;
 			// Where
 			if (isset($params['id']) && $params['id'] > 0) {
 				$where = "(p.`target` = '{$params['controller']}/{$params['action']}/{$params['id']}'
-						AND p.`entityId` = {$params['id']} AND p.`type` = 'action')";
+						AND p.`moduleId` = {$params['id']} AND p.`type` = 'action')";
 			}
 			if (isset($params['parent']) && $params['parent'] > 0) {
 				if ($where != '') {
@@ -403,26 +398,26 @@ SQL;
 					$permissionId = $result['id'];
 				}
 				if ($permissionId > 0) {
-					//$roleId = AgereString::getStringAssocDigit($user['roleId'], 'role');
-					//$roleId = implode(', ', $roleId);
+					//$maskId = AgereString::getStringAssocDigit($user['maskId'], 'role');
+					//$maskId = implode(', ', $maskId);
 					//$userId = AgereString::getStringAssocDigit($user['id'], 'user');
 					//$currentUser = $userHelper->current();
-					//$roleId = AgereString::getStringAssocDigit($simpler($currentUser->getRoles())->asArray('id'), 'role');
-					$roleId = $userHelper->getAccessMask($user->asArray('role'), 'role');
-					$roleId = implode(', ', $roleId);
+					//$maskId = AgereString::getStringAssocDigit($simpler($currentUser->getRole())->asArray('id'), 'role');
+					$maskId = $userHelper->getAccessMask($user->asArray('role'), 'role');
+					$maskId = implode(', ', $maskId);
 					//$userId = AgereString::getStringAssocDigit($currentUser->getId(), 'user');
 					$userId = $userHelper->getAccessMask($user->getId(), 'user');
 
-					//$roleId = $simpler($user->getRoles())->asArray('id');
-					//$roleId = implode(', ', $roleId);
+					//$maskId = $simpler($user->getRole())->asArray('id');
+					//$maskId = implode(', ', $maskId);
 					//$userId = AgereString::getStringAssocDigit($user['id'], 'user');
 
 					$sql = <<<SQL
-SELECT pa.`roleId`, pa.`access`
+SELECT pa.`maskId`, pa.`access`
 FROM `permission_access` pa
 WHERE pa.`permissionId` = {$permissionId}
-AND (pa.`roleId` IN ({$roleId})
-OR pa.`roleId` = '{$userId}')
+AND (pa.`maskId` IN ({$maskId})
+OR pa.`maskId` = '{$userId}')
 SQL;
 					//\Zend\Debug\Debug::dump($sql); die(__METHOD__);
 					// Table permission_access
@@ -492,7 +487,7 @@ SQL;
 		return $this;
 	}
 
-	public function getRoles() {
+	public function getRole() {
 		return $this->roles;
 	}
 

@@ -27,7 +27,7 @@ Agere\User\Model\User:
     password:
       type: string
       length: 32
-    firstName:
+    fio:
       type: string
       length: 30
     lastName:
@@ -60,6 +60,7 @@ Agere\User\Model\User:
         comment: Дата принятия на работу
     photo:
       type: string
+      nullable: true
       length: 255
     notation:
       type: text
@@ -67,14 +68,16 @@ Agere\User\Model\User:
     showIndex:
       type: string
       length: 255
-      nullable: false
+      nullable: true
       options:
         default: city
         comment: Доступні значення city, supplier
     sendEmails:
       type: integer
+      nullable: true
     remove:
       type: integer
+      nullable: true
   manyToMany:
     #cities: # unidirectional @link http://goo.gl/xqnlAl
     #  targetEntity: Magere\City\Model\City

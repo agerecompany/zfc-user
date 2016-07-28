@@ -36,7 +36,7 @@ class User {
 	/**
 	 * @var string
 	 */
-	private $firstName;
+	private $fio;
 
 	/**
 	 * @var string
@@ -254,13 +254,13 @@ class User {
 
 	/**
 	 * Set firstName
-
-	 *
-*@param string $firstName
+ 
+*
+*@param string $fio
 	 * @return User
 	 */
-	public function setFirstName($firstName) {
-		$this->firstName = $firstName;
+	public function setFio($fio) {
+		$this->fio = $fio;
 
 		return $this;
 	}
@@ -270,8 +270,8 @@ class User {
 	 *
 	 * @return string
 	 */
-	public function getFirstName() {
-		return $this->firstName;
+	public function getFio() {
+		return $this->fio;
 	}
 
 	/**
@@ -310,7 +310,7 @@ class User {
 	}
 
 	public function getName() {
-		return $this->getFirstName() . ' ' . $this->getPatronymic() . ' ' . $this->getLastName();
+		return $this->getFio() . ' ' . $this->getPatronymic() . ' ' . $this->getLastName();
 	}
 
 	/**
@@ -676,29 +676,29 @@ class User {
 *@param \Agere\OrderSale\Model\OrderSale $orderSale
 	 * @return User
 	 */
-	public function addOrderSale(\Agere\OrderSale\Model\OrderSale $orderSale) {
+	/*public function addOrderSale(\Agere\OrderSale\Model\OrderSale $orderSale) {
 		$this->orderSale[] = $orderSale;
 
 		return $this;
-	}
+	}*/
 
 	/**
 	 * Remove orderSale
 	 *
 	 * @param \Agere\OrderSale\Model\OrderSale $orderSale
 	 */
-	public function removeOrderSale(\Agere\OrderSale\Model\OrderSale $orderSale) {
+	/*public function removeOrderSale(\Agere\OrderSale\Model\OrderSale $orderSale) {
 		$this->orderSale->removeElement($orderSale);
-	}
+	}*/
 
 	/**
 	 * Get orderSale
 	 *
 	 * @return \Doctrine\Common\Collections\Collection
 	 */
-	public function getOrderSale() {
+	/*public function getOrderSale() {
 		return $this->orderSale;
-	}
+	}*/
 
 	/**
 	 * Add orderSalePaid
@@ -707,29 +707,29 @@ class User {
 *@param \Agere\OrderSale\Model\OrderSalePaid $orderSalePaid
 	 * @return User
 	 */
-	public function addOrderSalePaid(\Agere\OrderSale\Model\OrderSalePaid $orderSalePaid) {
+	/*public function addOrderSalePaid(\Agere\OrderSale\Model\OrderSalePaid $orderSalePaid) {
 		$this->orderSalePaid[] = $orderSalePaid;
 
 		return $this;
-	}
+	}*/
 
 	/**
 	 * Remove orderSalePaid
 	 *
 	 * @param \Agere\OrderSale\Model\OrderSalePaid $orderSalePaid
 	 */
-	public function removeOrderSalePaid(\Agere\OrderSale\Model\OrderSalePaid $orderSalePaid) {
+	/*public function removeOrderSalePaid(\Agere\OrderSale\Model\OrderSalePaid $orderSalePaid) {
 		$this->orderSalePaid->removeElement($orderSalePaid);
-	}
+	}*/
 
 	/**
 	 * Get orderSalePaid
 	 *
 	 * @return \Doctrine\Common\Collections\Collection
 	 */
-	public function getOrderSalePaid() {
+	/*public function getOrderSalePaid() {
 		return $this->orderSalePaid;
-	}
+	}*/
 
 	/**
 	 * Add callCenter
@@ -738,29 +738,29 @@ class User {
 *@param \Agere\CallCenter\Model\CallCenter $callCenter
 	 * @return User
 	 */
-	public function addCallCenter(\Agere\CallCenter\Model\CallCenter $callCenter) {
+	/*public function addCallCenter(\Agere\CallCenter\Model\CallCenter $callCenter) {
 		$this->callCenter[] = $callCenter;
 
 		return $this;
-	}
+	}*/
 
 	/**
 	 * Remove callCenter
 	 *
 	 * @param \Agere\CallCenter\Model\CallCenter $callCenter
 	 */
-	public function removeCallCenter(\Agere\CallCenter\Model\CallCenter $callCenter) {
+	/*public function removeCallCenter(\Agere\CallCenter\Model\CallCenter $callCenter) {
 		$this->callCenter->removeElement($callCenter);
-	}
+	}*/
 
 	/**
 	 * Get callCenter
 	 *
 	 * @return \Doctrine\Common\Collections\Collection
 	 */
-	public function getCallCenter() {
+	/*public function getCallCenter() {
 		return $this->callCenter;
-	}
+	}*/
 
 	/**
 	 * Add cart
@@ -769,29 +769,29 @@ class User {
 *@param \Agere\Cart\Model\Cart $cart
 	 * @return User
 	 */
-	public function addCart(\Agere\Cart\Model\Cart $cart) {
+	/*public function addCart(\Agere\Cart\Model\Cart $cart) {
 		$this->cart[] = $cart;
 
 		return $this;
-	}
+	}*/
 
 	/**
 	 * Remove cart
 	 *
 	 * @param \Agere\Cart\Model\Cart $cart
 	 */
-	public function removeCart(\Agere\Cart\Model\Cart $cart) {
+	/*public function removeCart(\Agere\Cart\Model\Cart $cart) {
 		$this->cart->removeElement($cart);
-	}
+	}*/
 
 	/**
 	 * Get cart
 	 *
 	 * @return \Doctrine\Common\Collections\Collection
 	 */
-	public function getCart() {
+	/*public function getCart() {
 		return $this->cart;
-	}
+	}*/
 
 	/**
 	 * Add files
@@ -800,20 +800,20 @@ class User {
 *@param \Agere\Files\Model\Files $files
 	 * @return User
 	 */
-	public function addFile(\Agere\Files\Model\Files $files) {
+	/*public function addFile(\Agere\Files\Model\Files $files) {
 		$this->files[] = $files;
 
 		return $this;
-	}
+	}*/
 
 	/**
 	 * Remove files
 	 *
 	 * @param \Agere\Files\Model\Files $files
 	 */
-	public function removeFile(\Agere\Files\Model\Files $files) {
+	/*public function removeFile(\Agere\Files\Model\Files $files) {
 		$this->files->removeElement($files);
-	}
+	}*/
 
 	/**
 	 * Get files

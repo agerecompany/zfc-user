@@ -1,0 +1,27 @@
+Agere\User\Model\UsersRoles:
+  type: entity
+  table: users_roles
+  repositoryClass: Agere\User\Model\Repository\UsersRolesRepository
+  fields:
+    #id:
+    #  id: true
+    # type: integer
+    #  generator:
+    #    strategy: AUTO
+    #  options:
+    #    unsigned: true
+    userId:
+      type: integer
+      options:
+        unsigned: true
+    roleId:
+      type: integer
+      options:
+        unsigned: true
+  manyToOne:
+    user:
+      targetEntity: Agere\User\Model\User
+      inversedBy: usersRoles
+      joinColumn:
+        name: userId
+        referencedColumnName: id

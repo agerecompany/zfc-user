@@ -5,27 +5,23 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\EntityRepository;
 
-use Agere\User\Model\User;
 use Agere\User\Model\UsersRoles;
 use Agere\Role\Model\Role;
-class UserRepository extends EntityRepository {
+class UsersRolesRepository extends EntityRepository {
 
 	protected $_table = 'user';
 	protected $_alias = 'u';
 	protected $roleAlias = 'roles';
 
 
-	public function getUsers()
+	public function getUsersRoles()
 	{
-		$alias = 'user';
-		$r = 'role';
-		$u = 'user';
-		$qb = $this->createQueryBuilder($alias)
-			//->leftJoin($alias . '.role', $r)
-			//->leftJoin($alias . '.user', $u)
-		;
-	//	$qb->getQuery()->getArrayResult();
-		return $qb;
+		$queryBuilder = $this->createQueryBuilder('c');
+
+		$queryBuilder->select(array('c', 'u'))
+			->leftJoin('c.user', 'u');
+
+		return $queryBuilder->getQuery()->getResult();
 	}
 
 	public function getUsers2()

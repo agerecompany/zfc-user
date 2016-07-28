@@ -1,41 +1,54 @@
 <?php
-$controller = $this->layout()->route->getParam('controller');
-$action = $this->layout()->route->getParam('action');
-$classActiveLi = 'ui-tabs-active ui-state-active';
+/**
+ * @see \TwbBundle\Form\View\Helper\TwbBundleForm
+ */
+$controller = $this->current('route')->getParam('controller')
 ?>
-<div class="body-content-layout">
-<div class="ui-tabs ui-widget ui-widget-content ui-corner-all">
-	<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
-		<li class="ui-state-default ui-corner-top<?=($action == 'add' || $action == 'edit') ? ' '.$classActiveLi : ''?>">
-			<a href="<?=$this->url('default/id', [
-				'controller' => $controller,
-				'action'     => 'edit',
-				'id'		 => $id,
-			])?>" class="ui-tabs-anchor">Основные данные</a>
-		</li>
-		<?php
-		$buttonsArgs['history'] = [
-			'href'       => $this->url('default/id', [
-				'controller' => $controller,
-				'action'     => 'history',
-				'id'		 => $id,
-			]),
-			'controller' => $controller,
-			'action'     => 'history',
-			'type'		 => 'li',
-		];
+<!--hardcode-->
+<button title="Назад" onclick="document.location.href='/<?= 'user'   ;?>'; return false" class="btn btn-default btn-xs">Назад</button>
 
-		if ($id > 0)
-		{
-			echo $this->buttons('usersTabs', $buttonsArgs, ['classActive' => $classActiveLi, 'action' => $action]);
-		}
-		?>
-	</ul>
+<?php
+/*$form->setAttribute('action', $this->url('default/wildcard', [
+    'controller' => $this->layout()->route->getParam('controller'),
+    'action' => $this->layout()->route->getParam('action'),
+    'id' => $this->layout()->route->getParam('id'),
+]))->prepare();*/
 
-	<div class="ui-tabs-panel ui-widget-content ui-corner-bottom tab-fixed-content">
-		<!-- content for one tab -->
-        <?=$this->partial((in_array($partialTab, ['history']) ? 'template/'.$partialTab : $controller.'/edit/'.$partialTab))?>
-	</div>
+// We call the prepare here in order to fill the initial data and adjust the form properties, if needed
+$form->setAttribute('class','form-horizontal');
+$form->prepare();
 
-</div>
+?>
+<div class="row">
+    <!-- left column -->
+    <div class="col-md-6" style="margin-left: 50px;">
+        <!-- general form elements -->
+        <div class="box box-primary">
+            <div class="box-body">
+                <?= $this->form(null, null)->openTag($form) ?>
+                <?php /** @var \Agere\User\Form\UserFieldset */ ?>
+                <?php foreach ($form->get('user') as $key => $elementOrFieldset) : ?>
+                    <?php if ($elementOrFieldset instanceof \Zend\Form\FieldsetInterface) : ?>
+                        <div class="form-group">
+                            <fieldset id="<?= $key ?>">
+                                <?php foreach ($elementOrFieldset as $subElementOrFieldset) : ?>
+                                    <div class="field-group">
+                                        <?= $this->formRow($subElementOrFieldset); ?>
+                                    </div>
+                                <?php endforeach;?>
+                            </fieldset>
+                        </div>
+                    <?php else : ?>
+                        <div class="form-group">
+                            <?= $this->formRow($elementOrFieldset); ?>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach;?>
+                <div class="box-footer">
+                    <?= $this->formElement($form->get('submit'))?>
+                </div>
+                <?= $this->form()->closeTag() ?>
+            </div>
+        </div>
+    </div>
 </div>
