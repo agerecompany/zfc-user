@@ -100,3 +100,10 @@ Agere\User\Model\User:
         inverseJoinColumns:
           roleId:
             referencedColumnName: id
+  manyToOne:
+      pool:
+        targetEntity: Agere\Pool\Model\Pool
+        inversedBy: pool
+        joinColumn:
+          name: poolId
+          referencedColumnName: id

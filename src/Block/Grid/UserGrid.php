@@ -71,7 +71,11 @@ FORMATTER;
         $col->setWidth(2);
         $grid->addColumn($col);
 
-
+        $col = new Column\Select('role', 'role');
+        $col->setLabel('Email');
+        $col->setTranslationEnabled();
+        $col->setWidth(2);
+        $grid->addColumn($col);
 
         return $grid;
     }

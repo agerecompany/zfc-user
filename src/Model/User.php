@@ -141,6 +141,11 @@ class User {
 	private $files;
 
 	/**
+	 * @var integer
+	 */
+	private $pool;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -168,7 +173,7 @@ class User {
 	 * Set departmentId
 
 	 *
-*@param integer $departmentId
+	 *@param integer $departmentId
 	 * @return User
 	 */
 	public function setDepartmentId($departmentId) {
@@ -190,7 +195,7 @@ class User {
 	 * Set supplierId
 
 	 *
-*@param integer $supplierId
+	 *@param integer $supplierId
 	 * @return User
 	 */
 	public function setSupplierId($supplierId) {
@@ -212,7 +217,7 @@ class User {
 	 * Set email
 
 	 *
-*@param string $email
+	 *@param string $email
 	 * @return User
 	 */
 	public function setEmail($email) {
@@ -234,7 +239,7 @@ class User {
 	 * Set password
 
 	 *
-*@param string $password
+	 *@param string $password
 	 * @return User
 	 */
 	public function setPassword($password) {
@@ -254,9 +259,9 @@ class User {
 
 	/**
 	 * Set firstName
- 
-*
-*@param string $fio
+
+	 *
+	 *@param string $fio
 	 * @return User
 	 */
 	public function setFio($fio) {
@@ -278,7 +283,7 @@ class User {
 	 * Set lastName
 
 	 *
-*@param string $lastName
+	 *@param string $lastName
 	 * @return User
 	 */
 	public function setLastName($lastName) {
@@ -300,7 +305,7 @@ class User {
 	 * Set patronymic
 
 	 *
-*@param string $patronymic
+	 *@param string $patronymic
 	 * @return User
 	 */
 	public function setPatronymic($patronymic) {
@@ -326,7 +331,7 @@ class User {
 	 * Set phone
 
 	 *
-*@param string $phone
+	 *@param string $phone
 	 * @return User
 	 */
 	public function setPhone($phone) {
@@ -348,7 +353,7 @@ class User {
 	 * Set phoneWork
 
 	 *
-*@param string $phoneWork
+	 *@param string $phoneWork
 	 * @return User
 	 */
 	public function setPhoneWork($phoneWork) {
@@ -370,7 +375,7 @@ class User {
 	 * Set phoneInternal
 
 	 *
-*@param string $phoneInternal
+	 *@param string $phoneInternal
 	 * @return User
 	 */
 	public function setPhoneInternal($phoneInternal) {
@@ -392,8 +397,8 @@ class User {
 	 * Set post
 
 	 *
-*@param string $post
-     * @return User
+	 *@param string $post
+	 * @return User
 	 */
 	public function setPost($post) {
 		$this->post = $post;
@@ -414,8 +419,8 @@ class User {
 	 * Set dateBirth
 
 	 *
-*@param \DateTime $dateBirth
-     * @return User
+	 *@param \DateTime $dateBirth
+	 * @return User
 	 */
 	public function setDateBirth($dateBirth) {
 		$this->dateBirth = $dateBirth;
@@ -436,8 +441,8 @@ class User {
 	 * Set dateEmployment
 
 	 *
-*@param \DateTime $dateEmployment
-     * @return User
+	 *@param \DateTime $dateEmployment
+	 * @return User
 	 */
 	public function setDateEmployment($dateEmployment) {
 		$this->dateEmployment = $dateEmployment;
@@ -458,8 +463,8 @@ class User {
 	 * Set photo
 
 	 *
-*@param string $photo
-     * @return User
+	 *@param string $photo
+	 * @return User
 	 */
 	public function setPhoto($photo) {
 		$this->photo = $photo;
@@ -480,8 +485,8 @@ class User {
 	 * Set notation
 
 	 *
-*@param string $notation
-     * @return User
+	 *@param string $notation
+	 * @return User
 	 */
 	public function setNotation($notation) {
 		$this->notation = $notation;
@@ -502,8 +507,8 @@ class User {
 	 * Set showIndex
 
 	 *
-*@param string $showIndex
-     * @return User
+	 *@param string $showIndex
+	 * @return User
 	 */
 	public function setShowIndex($showIndex) {
 		$this->showIndex = $showIndex;
@@ -524,8 +529,8 @@ class User {
 	 * Set sendEmails
 
 	 *
-*@param integer $sendEmails
-     * @return User
+	 *@param integer $sendEmails
+	 * @return User
 	 */
 	public function setSendEmails($sendEmails) {
 		$this->sendEmails = $sendEmails;
@@ -546,7 +551,7 @@ class User {
 	 * Set remove
 
 	 *
-*@param integer $remove
+	 *@param integer $remove
 	 * @return User
 	 */
 	public function setRemove($remove) {
@@ -586,8 +591,8 @@ class User {
 	 * Add usersCity
 
 
-*
-*@param \Agere\User\Model\UsersCity $usersCity
+	 *
+	 *@param \Agere\User\Model\UsersCity $usersCity
 	 * @return User
 	 */
 	/*public function addUsersCity(\Agere\Users\Model\UsersCity $usersCity)
@@ -601,7 +606,7 @@ class User {
 	 * Remove usersCity
 
 	 *
-*@param \Agere\User\Model\UsersCity $usersCity
+	 *@param \Agere\User\Model\UsersCity $usersCity
 	 */
 	/*public function removeUsersCity(\Agere\Users\Model\UsersCity $usersCity)
 	{
@@ -622,8 +627,8 @@ class User {
 	 * Add usersRoles
 
 
-*
-*@param \Agere\User\Model\UsersRoles $usersRoles
+	 *
+	 *@param \Agere\User\Model\UsersRoles $usersRoles
 	 * @return User
 	 */
 	/*public function addUsersRole(\Agere\Users\Model\UsersRoles $usersRoles)
@@ -636,7 +641,7 @@ class User {
 	 * Remove usersRoles
 
 	 *
-*@param \Agere\User\Model\UsersRoles $usersRoles
+	 *@param \Agere\User\Model\UsersRoles $usersRoles
 	 */
 	/*public function removeUsersRole(\Agere\Users\Model\UsersRoles $usersRoles)
 	{
@@ -673,7 +678,7 @@ class User {
 	 * Add orderSale
 
 	 *
-*@param \Agere\OrderSale\Model\OrderSale $orderSale
+	 *@param \Agere\OrderSale\Model\OrderSale $orderSale
 	 * @return User
 	 */
 	/*public function addOrderSale(\Agere\OrderSale\Model\OrderSale $orderSale) {
@@ -704,7 +709,7 @@ class User {
 	 * Add orderSalePaid
 
 	 *
-*@param \Agere\OrderSale\Model\OrderSalePaid $orderSalePaid
+	 *@param \Agere\OrderSale\Model\OrderSalePaid $orderSalePaid
 	 * @return User
 	 */
 	/*public function addOrderSalePaid(\Agere\OrderSale\Model\OrderSalePaid $orderSalePaid) {
@@ -735,7 +740,7 @@ class User {
 	 * Add callCenter
 
 	 *
-*@param \Agere\CallCenter\Model\CallCenter $callCenter
+	 *@param \Agere\CallCenter\Model\CallCenter $callCenter
 	 * @return User
 	 */
 	/*public function addCallCenter(\Agere\CallCenter\Model\CallCenter $callCenter) {
@@ -766,7 +771,7 @@ class User {
 	 * Add cart
 
 	 *
-*@param \Agere\Cart\Model\Cart $cart
+	 *@param \Agere\Cart\Model\Cart $cart
 	 * @return User
 	 */
 	/*public function addCart(\Agere\Cart\Model\Cart $cart) {
@@ -797,7 +802,7 @@ class User {
 	 * Add files
 
 	 *
-*@param \Agere\Files\Model\Files $files
+	 *@param \Agere\Files\Model\Files $files
 	 * @return User
 	 */
 	/*public function addFile(\Agere\Files\Model\Files $files) {
@@ -834,4 +839,23 @@ class User {
 		return $name . ' ' . $string;
 	}*/
 
+
+	/**
+	 * @return int
+	 */
+	public function getPool()
+	{
+		return $this->pool;
+	}
+
+	/**
+	 * @param int $pool
+	 * @return User
+	 */
+	public function setPool($pool)
+	{
+		$this->pool = $pool;
+
+		return $this;
+	}
 }

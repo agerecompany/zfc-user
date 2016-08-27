@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Agere\User\Model\User;
 use Agere\User\Model\UsersRoles;
 use Agere\Role\Model\Role;
+
 class UserRepository extends EntityRepository {
 
 	protected $_table = 'user';
@@ -18,49 +19,43 @@ class UserRepository extends EntityRepository {
 	public function getUsers()
 	{
 		$alias = 'user';
-		$r = 'role';
-		$u = 'user';
 		$qb = $this->createQueryBuilder($alias)
-			//->leftJoin($alias . '.role', $r)
-			//->leftJoin($alias . '.user', $u)
+			->leftJoin($alias . '.roles', 'role')
 		;
-	//	$qb->getQuery()->getArrayResult();
 		return $qb;
 	}
 
-	public function getUsers2()
+	/**
+	 * @return string
+	 */
+	public function findUsersByRole($criteria)
 	{
-		$qb = $this->createQueryBuilder('user');
-		$qb->select('ur');
-		$qb->select('rol')
-			->from(UsersRoles::class, 'ur')
-			//->from(Role::class, 'rol')
-			//->from(Role::class, 'rol')
-			//->from(Role::class, 'r')
-			->leftJoin('ur.user', 'ds')
-			//->leftJoin('ds.id', 'dds')
-			//->leftJoin('rol.mnemo')
-			//->leftJoin('r.mnemo', 'u')
-		;
-		//$qb->where($qb->expr()->in('rol' . '.id', '?1'));
-		//$qb->setParameter(1, 'ur.roleId');
+		$qb = $this->getUsers();
+		$qb->where($qb->expr()->eq('role' . '.mnemo', '?1'));
+		$qb->setParameter(1, $criteria[0]);
 
-		/*$qb
-			->select('a', 'u')
-			->from('Credit\Entity\UserCreditHistory', 'a')
-			->leftJoin('a.user', 'u')
-			->where('u = :user')
-			->setParameter('user', $users)
-			->orderBy('a.created_at', 'DESC');*/
-
-
-		return $qb;
-
+		//\Zend\Debug\Debug::dump($qb->getQuery()->getResult()); die();
+		return $qb->getQuery()->getResult();
 	}
-	
+
+
+	/*public function getUsers()
+	{
+		$user = 'userId';
+		$role = 'roleId';
+
+		$qb = $this->createQueryBuilder('users_roles')
+			->leftJoin('users_roles' . '.userId', $user)
+			->leftJoin('users_roles' . '.roleId', $role)
+		;
+
+		\Zend\Debug\Debug::dump($qb->getQuery()->getArrayResult()); die();
+		return $qb;
+	}*/
+
 	/*=================Old code =============================================*/
 
-	
+
 	public function findByRoles($roles) {
 		$roleAlias = 'roles';
 
@@ -72,7 +67,7 @@ class UserRepository extends EntityRepository {
 		;
 
 		$qb->where($qb->expr()->in($roleAlias . '.id', '?1'));
-		$qb->setParameter(1, $roles);
+		$qb->setParameter(1, $roles[0]);
 
 		//$query = $qb->getQuery();
 		//\Zend\Debug\Debug::dump($query->getSql()); die(__METHOD__);
@@ -86,7 +81,7 @@ class UserRepository extends EntityRepository {
 	 * @param array $orderBy
 	 * @param array $groupBy
 	 * @param string $distinct
-     * @param bool $isPermission
+	 * @param bool $isPermission
 	 * @return array
 	 */
 	public function findUsers($where = '', array $args = [], array $orderBy = [], array $groupBy = [], $distinct = '', $isPermission = false)
@@ -123,13 +118,13 @@ class UserRepository extends EntityRepository {
 			$distinct = 'DISTINCT '.$distinct.', ';
 		}
 
-        $join = '';
+		$join = '';
 
-        if ($isPermission)
-        {
-            $join = "INNER JOIN `permission_access` pa ON pa.`maskId`= CONCAT({$this->_alias}.`id`, '00')
+		if ($isPermission)
+		{
+			$join = "INNER JOIN `permission_access` pa ON pa.`maskId`= CONCAT({$this->_alias}.`id`, '00')
                     INNER JOIN `permission` p ON pa.`permissionId` = p.`id`";
-        }
+		}
 
 		$order = $this->getOrderBy($orderBy);
 
