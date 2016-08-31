@@ -18,6 +18,7 @@ return array(
             'users/children-index' => __DIR__ . '/../view/magere/users/children/index/index.phtml',
             'users/children-monitoring' => __DIR__ . '/../view/magere/users/children/monitoring/index.phtml',
             'users/edit/basic-data' => __DIR__ . '/../view/magere/users/tabs/edit/basic-data.phtml',
+            'user-info' => __DIR__ . '/../view/agere/user/user-info.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
