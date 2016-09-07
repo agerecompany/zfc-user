@@ -145,6 +145,18 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
         ]);
 
         /*$this->add([
+            'name' => 'photo',
+            'type' => \Zend\Form\Element\File::class,
+            'options' => [
+                'label' => 'image',
+            ],
+
+            'attributes' => [
+                'type' => 'file',
+            ],
+        ]);*/
+
+        /*$this->add([
                 'type' => 'Zend\Form\Element\File',
                 'name' => 'photo',
                 'options' => [
@@ -185,6 +197,13 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
                 ],
             ]
         );
+
+        $this->add([
+            'name' => 'photo',
+            'attributes' => [
+                'type' => 'file',
+            ],
+        ]);
 
         /*$this->add([
             'name' => 'dateBirth',
@@ -307,18 +326,6 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
                 ],
             ]);*/
 
-        /*$this->add(array(
-                'type' => 'Zend\Form\Element\File',
-                'name' => 'photo',
-                'options' => array(
-                    'label' => 'Your photo'
-                ),
-                'attributes' => array(
-                    'required' => 'required',
-                    'id'  => 'photo'
-                ),
-            ));*/
-
         /*$this->add([
                 'name' => 'photo',
                 'options' => [
@@ -348,6 +355,45 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
                     ['name' => 'StringTrim'],
                 ],
             ],
+
+            /*'photo' => [
+                'required' => false,
+                'validators' => array (
+                    array (
+                        'name' => 'filesize',
+                        'options' => array (
+                            'max' => 2097152, // 2 MB
+                        ),
+                    ),
+                    array (
+                        'name' => 'filemimetype',
+                        'options' => array (
+                            'mimeType' => 'image/png,image/x-png,image/jpg,image/jpeg,image/gif',
+                        )
+                    ),
+                    array (
+                        'name' => 'fileimagesize',
+                        'options' => array (
+                            'maxWidth' => 5,
+                            'maxHeight' => 5
+                        )
+                    ),
+                ),
+                'filters' => array (
+                    // the filter below will save the uploaded file under
+                    // <app-path>/data/images/photos/<tmp_name>_<random-data>
+                    array (
+                        'name'    => 'filerenameupload',
+                        'options' => array (
+                            // Notice: Make sure that the folder below is existing on your system
+                            //         otherwise this filter will not pass and you will get strange
+                            //         error message reporting that the required field is empty
+                            'target'    => 'data/image/photos/',
+                            'randomize' => true,
+                        ),
+                    ),
+                ),
+            ],*/
         ];
     }
 }

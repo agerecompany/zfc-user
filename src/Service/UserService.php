@@ -13,7 +13,7 @@ class UserService extends DomainServiceAbstract
 	protected $isMd5 = false;
 	const SOLT = 'G6t8?Mj$7h#ju';
 
-	protected $_pathUploadFiles = './var/documents/users/';
+	protected $_pathUploadFiles = '/uploads/user/';
 
 	protected $_sizesPhoto = [
 		'large'		=> 400,
@@ -45,6 +45,14 @@ class UserService extends DomainServiceAbstract
 		$om->flush();
 	}
 
+	/**
+	 * @return string
+	 */
+	public function getPathUploadFiles()
+	{
+		return $this->_pathUploadFiles;
+	}
+
 
 	/*=================Old code =============================================*/
 
@@ -52,7 +60,7 @@ class UserService extends DomainServiceAbstract
 	/**
 	 * @return string
 	 */
-	public function getPathUploadFiles()
+	public function getPathUploadFiles2()
 	{
 		return $this->_pathUploadFiles;
 	}

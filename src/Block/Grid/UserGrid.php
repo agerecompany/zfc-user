@@ -85,7 +85,34 @@ FORMATTER;
         $toolbar = $this->getToolbar();
         $route = $this->getRouteMatch();
 
-        $grid->getResponse()->setVariable('exportRenderers', ['PHPExcel' => 'Excel']);
+        // Додати кнопки експорту (відображається лівороч)
+        $grid->getResponse()->setVariable('exportRenderers', [
+            'PHPExcel' => 'Excel',
+            'csv' => 'CSV',
+            'tcpdf' => 'PDF'
+        ]);
+
+        // додати звичайну кнопку (відображається праворуч)
+        $toolbar->addButton('create', [
+            'title' => 'Sync',
+            'value' => [
+                'default' => [ // route name
+                    'controller' => $route->getParam('controller'), // route params
+                    'action' => 'sync',
+                ]
+            ],
+            'class' => 'btn btn-success btn-xs',
+        ]);
+
+        // Додати drop down елементи. Кожен елемент має окрему ланку (відображаються по центрі)
+        $toolbar->createActionPanel('Standard')
+            ->addAction('Delete', [$route->getMatchedRouteName() => [
+                'controller' => $route->getParam('controller'),
+                'action' => 'delete',
+            ]])->addAction('Change status', [$route->getMatchedRouteName() => [
+                'controller' => $route->getParam('controller'),
+                'action' => 'changeStatus',
+            ]], ['group' => 'prop', 'position' => 50]);
 
         return $toolbar;
     }

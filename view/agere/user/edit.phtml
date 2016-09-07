@@ -44,6 +44,13 @@ $form->prepare();
                         </div>
                     <?php endif; ?>
                 <?php endforeach;?>
+                <?/*= $this->formRow($form->get('photo'));*/?>
+                <!--<div class="form-element">
+                    <?php /*$fileElement = $form->get('photo'); */?>
+                    <?php /*echo $this->formLabel($fileElement); */?>
+                    <?php /*echo $this->formFile($fileElement); */?>
+                    <?php /*echo $this->formElementErrors($fileElement); */?>
+                </div>-->
                 <div class="box-footer">
                     <?= $this->formElement($form->get('submit'))?>
                 </div>

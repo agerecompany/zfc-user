@@ -10,6 +10,8 @@ class UserForm extends Form
     public function init()
     {
         $this->setName('user');
+        $this->setAttribute('method', 'post');
+        $this->setAttribute('enctype','multipart/form-data');
 
         $this->add([
             'name' => 'user',
@@ -18,7 +20,6 @@ class UserForm extends Form
                 'use_as_base_fieldset' => true,
             ],
         ]);
-
         $this->add([
             'name' => 'submit',
             'attributes' => [

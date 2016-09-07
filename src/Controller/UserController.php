@@ -8,7 +8,6 @@ use Zend\Mvc\Controller\AbstractActionController,
 	Zend\View\Model\ViewModel,
 	Zend\View\Model\JsonModel,
 	Zend\Session\Container as SessionContainer,
-	Agere\Agere\File\Transfer\Adapter\Http,
 	Agere\Agere\File\Resize\Adapter\GbResize,
 	Agere\Agere\String\String as AgereString,
 	Agere\User\Form\Login as LoginForm,
@@ -19,7 +18,7 @@ use Agere\User\Model\User;
 use Agere\User\Form\UserForm;
 use Agere\Core\Service\ServiceManagerAwareTrait;
 use Agere\Core\Controller\DeleteActionAwareTrait;
-
+use Agere\File\Transfer\Adapter\Http;
 use Agere\Material\Block\Grid\MaterialGrid;
 use Agere\Material\Form\MaterialForm;
 
@@ -63,10 +62,12 @@ class UserController extends AbstractActionController {
 	{
 		$request = $this->getRequest();
 		$route = $this->getEvent()->getRouteMatch();
+		/** @var \Agere\User\Service\UserService $service */
 		$service = $this->getService();
+		$pathUploadFiles = $service->getPathUploadFiles();
 		$fm = $this->getServiceManager()->get('FormElementManager');
 		/** @var User $user */
-		$user= ($user = $service->find($id = (int) $route->getParam('id')))
+		$user = ($user = $service->find($id = (int) $route->getParam('id')))
 			? $user
 			: $service->getObjectModel();
 
@@ -75,8 +76,22 @@ class UserController extends AbstractActionController {
 		$form->bind($user);
 		if ($request->isPost()) {
 			$form->setData($request->getPost());
-			if ($form->isValid()) {
+			$files = $request->getFiles()->toArray();
+
+			$validatorFilesExt = new \Zend\Validator\File\Extension([
+				'extension' => ['jpg', 'jpeg', 'png']
+			]);
+			if ($form->isValid() /*&& $validatorFilesExt->isValid($files['user']['photo'])*/) {
+
+				// Upload files
+				$upload = new Http();
+				$upload->setDestination('./public'.$pathUploadFiles.$id.'/');
+				$extension = pathinfo($files['user']['photo']['name'], PATHINFO_EXTENSION);
+				$files['user']['photo']['name'] = 'photo.'.$extension;
+				$uploadFiles = $upload->receive($files['user']);
+				$user->setPhoto($uploadFiles[0]);
 				$this->getService()->saves($user);
+
 				$msg = 'Пользователь был успешно сохранен';
 				$this->flashMessenger()->addSuccessMessage($msg);
 
@@ -105,7 +120,7 @@ class UserController extends AbstractActionController {
 	}
 
 
-/*=================Old code =============================================*/
+	/*=================Old code =============================================*/
 	public function indexAction2($action = 'index', $sessionNameFilters = '')
 	{
 		$sessionNameFilters = ($sessionNameFilters != '') ? $sessionNameFilters : $this->sessionNameFilters;
@@ -153,7 +168,7 @@ class UserController extends AbstractActionController {
 					$groupedСity = true;
 					$orderBy = ['city' => 'ASC', 'email' => 'ASC'];
 				}
-				
+
 				// Field search
 				if (isset($post['groupedRole']))
 				{
@@ -282,7 +297,7 @@ class UserController extends AbstractActionController {
 
 		$fields = [/*'departmentId', */'id', 'supplierId', 'email', 'password', 'firstName', 'lastName', 'patronymic', 'phone',
 			'phoneWork', 'phoneInternal', 'post', 'dateBirth', 'dateEmployment', 'cityId[]', 'roleId[]', 'showIndex',
-            'notation', 'sendEmails'];
+			'notation', 'sendEmails'];
 		$form = new UserForm($id, $fields, $this->dbAdapter);
 
 		foreach ($fields as $field) {
@@ -408,13 +423,13 @@ class UserController extends AbstractActionController {
 					'entityId'	=> 0,
 					'type'		=> $type,
 				];
-				
+
 				$accessEntities = $this->getEM()
 					->getRepository('Agere\Permission\Model\Permission')
 					->findBy($data['permission']);
-					
+
 				$permissionIds = [];
-					
+
 				foreach($accessEntities as $accessEntitiy) {
 					$permissionIds[$accessEntitiy->getParent()] = $accessEntitiy->getId();
 				}
@@ -422,7 +437,7 @@ class UserController extends AbstractActionController {
 
 				// Used roleId with possible user, role, group
 				$roleId = ($id > 0) ? AgereString::getStringAssocDigit($id, 'user') : AgereString::getStringAssocDigit($oneItem->getId(), 'user');
-				
+
 				foreach ($permissionIds as $pParent => $pId)
 				{
 					if (!empty($values['permissionAccess'][$pParent]))
@@ -434,20 +449,20 @@ class UserController extends AbstractActionController {
 								'roleId' 		=> $roleId,
 								'access'		=> 4,
 							]);
-							
+
 						if(empty($accessEntities)) {
 							$permission = $this->getEM()
 								->find('Agere\Permission\Model\Permission', $pId);
-							
+
 							$accessEntities = new \Agere\Permission\Model\PermissionAccess();
 							$accessEntities->setPermissionId($pId);
 							$accessEntities->setMaskId($roleId);
 							$accessEntities->setAccess(4);
 							$accessEntities->setPermission($permission);
-							
+
 							$this->getEM()
 								->persist($accessEntities);
-								
+
 							$this->getEM()
 								->flush();
 						}
@@ -459,40 +474,40 @@ class UserController extends AbstractActionController {
 								'roleId' 		=> $roleId,
 								'access'		=> 4,
 							]);
-							
+
 						if(!empty($accessEntities)) {
 							$this->getEM()
 								->remove($accessEntities);
-								
+
 							$this->getEM()
 								->flush();
 						}
 					}
 				}
-				
-/*
-				foreach ($values['permissionAccessId'] as $key => $val)
-				{
-					if (isset($values['permissionAccess'][$key]) && ! (bool) $val)
-					{
-						$data['permission']['parent'] = $key;
-						$data['roleId'] = $roleId;
-						$data['access'] = 4;
 
-						$servicePermissionAccess->insert($data);
-					}
-					else if (! isset($values['permissionAccess'][$key]) && $val)
-					{
-						$itemPermissionAccess = $servicePermissionAccess->getItem($values['permissionAccessId'][$key]);
+				/*
+                                foreach ($values['permissionAccessId'] as $key => $val)
+                                {
+                                    if (isset($values['permissionAccess'][$key]) && ! (bool) $val)
+                                    {
+                                        $data['permission']['parent'] = $key;
+                                        $data['roleId'] = $roleId;
+                                        $data['access'] = 4;
 
-						if ($itemPermissionAccess)
-						{
-							$permissionId = $itemPermissionAccess->getPermissionId();
-							$servicePermissionAccess->delete($itemPermissionAccess);
-						}
-					}
-				}
-*/
+                                        $servicePermissionAccess->insert($data);
+                                    }
+                                    else if (! isset($values['permissionAccess'][$key]) && $val)
+                                    {
+                                        $itemPermissionAccess = $servicePermissionAccess->getItem($values['permissionAccessId'][$key]);
+
+                                        if ($itemPermissionAccess)
+                                        {
+                                            $permissionId = $itemPermissionAccess->getPermissionId();
+                                            $servicePermissionAccess->delete($itemPermissionAccess);
+                                        }
+                                    }
+                                }
+                */
 				// END Save permission access
 
 				// var_dump($saveData); die;
@@ -646,16 +661,16 @@ class UserController extends AbstractActionController {
 					try {
 						//$itemsUser = $userService->getItemsCollection(['email' => $email, 'password' => $passwordHash]);
 						$user = $userService->getRepository()->findOneBy([
-                            'email' => $email,
-                            'password' => $passwordHash
-                        ]);
+							'email' => $email,
+							'password' => $passwordHash
+						]);
 					} catch (\Exception $e) {
 						\Zend\Debug\Debug::dump($e->getMessage());
 						\Zend\Debug\Debug::dump($e->getTraceAsString());
 						die(__METHOD__); //@todo: Реалізувати нормальну обробку помилок
 					}
 
-                    //die(__METHOD__);
+					//die(__METHOD__);
 
 
 					//\Zend\Debug\Debug::dump($result->isValid()); die(__METHOD__);
@@ -689,7 +704,7 @@ class UserController extends AbstractActionController {
 
 					// Table permission_access (permission brands)
 					/** @var \Agere\Permission\Service\PermissionAccessService $permissionAccessService */
-                    /*$permissionAccessService = $sm->get('PermissionAccessService');
+					/*$permissionAccessService = $sm->get('PermissionAccessService');
 
                     $target = 'store';
                     $type = 'controller';
@@ -715,7 +730,7 @@ class UserController extends AbstractActionController {
 					$authService->getStorage()->write($user); // @todo Check for set only id
 					//$resource = unserialize($currentUser['resource']);
 
-                    //\Zend\Debug\Debug::dump($user); die(__METHOD__);
+					//\Zend\Debug\Debug::dump($user); die(__METHOD__);
 
 					if ('all' != $user->getRoles()->first()->getResource()) {
 						// Set expire login
@@ -731,14 +746,14 @@ class UserController extends AbstractActionController {
 		}
 
 
-        $view = new ViewModel([
-            'form' => $form,
-        ]);
+		$view = new ViewModel([
+			'form' => $form,
+		]);
 
-        // Disable layouts; use this view model in the MVC event instead
-        $view->setTerminal(true);
+		// Disable layouts; use this view model in the MVC event instead
+		$view->setTerminal(true);
 
-        return $view;
+		return $view;
 	}
 
 	public function logoutAction() {
@@ -928,13 +943,13 @@ class UserController extends AbstractActionController {
 						$saveData['photo'] = $uploadFiles ? $uploadFiles[0] : $item->getPhoto();
 					}
 					else */if (stripos($field, 'date') !== false)
-					{
-						$saveData[$field] = $postForm[$field] ? \DateTime::createFromFormat('d/m/Y', $postForm[$field]) : null;
-					}
-					else if ($field != 'passwordOld' && isset($postForm[$field]))
-					{
-						$saveData[$field] = $postForm[$field];
-					}
+				{
+					$saveData[$field] = $postForm[$field] ? \DateTime::createFromFormat('d/m/Y', $postForm[$field]) : null;
+				}
+				else if ($field != 'passwordOld' && isset($postForm[$field]))
+				{
+					$saveData[$field] = $postForm[$field];
+				}
 				}
 
 				if ($saveData)
@@ -1014,54 +1029,54 @@ class UserController extends AbstractActionController {
 	 * @param null $locator
 	 * @return JsonModel
 	 */
-    public function deleteAction($class = __CLASS__, $name = 'users', $request = null, $locator = null)
-    {
-        if (is_null($request)) {
-            $request = $this->getRequest();
-            $locator = $this->getServiceLocator();
-        }
+	public function deleteAction($class = __CLASS__, $name = 'users', $request = null, $locator = null)
+	{
+		if (is_null($request)) {
+			$request = $this->getRequest();
+			$locator = $this->getServiceLocator();
+		}
 
-        if ($request->isPost() && $request->isXmlHttpRequest()) {
-            /** @var \Agere\User\Service\UserService $service */
-            $service = $locator->get($this->serviceName);
-            // Access to page for current user
-            $responseEvent = $service->delete($class, [], $name);
-            $message = $responseEvent->first()['message'];
-            // END Access to page for current user
-            if ($message == '') {
-                $allow = false;
-                $post = $request->getPost();
-                $user = $service->getItem($post['id']);
-                //if ($user)
-                //{
-                $allow = $service->deleteItem($user);
-                //}
-                if (!$allow) {
-                    $service->save(['remove' => 1], $user);
-                    // Write log
-                    $params = [
-                        'type' => 'action',
-                        'target' => 'users/delete',
-                        'itemId' => $user->getId(),
-                        'message' => 'Удалено пользователя: ' . $user->getEmail(),
-                    ];
-                    $service->writeLog(__CLASS__, $params);
-                }
-                $result = new JsonModel([
-                    //'message' => ($allow) ? '' : 'Невозможно удалить № '.$post['id'].'. Сначала уберите прив\'язку к позиции!',
-                    'message' => '',
-                ]);
-            } else {
-                $result = new JsonModel([
-                    'message' => $message,
-                ]);
-            }
+		if ($request->isPost() && $request->isXmlHttpRequest()) {
+			/** @var \Agere\User\Service\UserService $service */
+			$service = $locator->get($this->serviceName);
+			// Access to page for current user
+			$responseEvent = $service->delete($class, [], $name);
+			$message = $responseEvent->first()['message'];
+			// END Access to page for current user
+			if ($message == '') {
+				$allow = false;
+				$post = $request->getPost();
+				$user = $service->getItem($post['id']);
+				//if ($user)
+				//{
+				$allow = $service->deleteItem($user);
+				//}
+				if (!$allow) {
+					$service->save(['remove' => 1], $user);
+					// Write log
+					$params = [
+						'type' => 'action',
+						'target' => 'users/delete',
+						'itemId' => $user->getId(),
+						'message' => 'Удалено пользователя: ' . $user->getEmail(),
+					];
+					$service->writeLog(__CLASS__, $params);
+				}
+				$result = new JsonModel([
+					//'message' => ($allow) ? '' : 'Невозможно удалить № '.$post['id'].'. Сначала уберите прив\'язку к позиции!',
+					'message' => '',
+				]);
+			} else {
+				$result = new JsonModel([
+					'message' => $message,
+				]);
+			}
 
-            return $result;
-        } else {
-            $this->getResponse()->setStatusCode(404);
-        }
-    }
+			return $result;
+		} else {
+			$this->getResponse()->setStatusCode(404);
+		}
+	}
 
 	/**
 	 * @param string $class
@@ -1135,7 +1150,7 @@ class UserController extends AbstractActionController {
 	}
 
 	public function getEM() {
-        return $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        //return $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
-    }
+		return $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+		//return $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+	}
 }
