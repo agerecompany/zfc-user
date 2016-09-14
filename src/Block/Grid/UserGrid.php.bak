@@ -15,7 +15,7 @@ use ZfcDatagrid\Column\Style;
 use ZfcDatagrid\Column\Type;
 use ZfcDatagrid\Action;
 
-use Agere\ZfcDataGrid\Block\AbstractGrid;
+use Agere\Grid\Block\AbstractGrid;
 
 class UserGrid extends AbstractGrid implements ObjectManagerAwareInterface {
 
@@ -26,60 +26,61 @@ class UserGrid extends AbstractGrid implements ObjectManagerAwareInterface {
 
     public function init() {
 
+        /** @var ProductRepository $repository */
         $grid = $this->getDataGrid();
+        $route = $this->getRouteMatch();
+        $view = $this->getViewRenderer();
+
         $grid->setId('user');
         $grid->setTitle('Пользователи');
-        $grid->setRendererName('jqGrid');
 
-        $colId = $this->add([
-            'name' => 'Select',
-            'construct' => ['id', 'user'],
-            'identity' => true,
-        ])->getDataGrid()->getColumnByUniqueId('user_id');
+        $colId = new Column\Select('id', 'user');
+        $colId->setIdentity();
+        $grid->addColumn($colId);
 
-        /*$this->add([
-            'name' => 'Select',
-            'construct' => ['id', 'user'],
-            'label' => 'Id',
-            'width' => 1,
 
-            'identity' => false,
-        ]);*/
-
-        $this->add([
-            'name' => 'Select',
-            'construct' => ['fio', 'user'],
-            'label' => 'Фио',
-            'translation_enabled' => true,
-            'width' => 2,
-            'formatters' => [
-                [
-                    'name' => 'Link',
-                    'link' => ['href' => '/user/edit', 'placeholder_column' => $colId] // special config
-                ],
-            ],
+        $deleteUrl = $view->url($route->getMatchedRouteName(), [
+            'controller' => $route->getParam('controller'),
+            'action' => 'delete'
         ]);
+        $massAction = new Action\Mass();
+        $massAction->setTitle('Удалить');
+        $massAction->setLink($deleteUrl);
+        $grid->addMassAction($massAction);
 
-        $this->add([
-            'name' => 'Select',
-            'construct' => ['email', 'user'],
-            'label' => 'Email',
-            'translation_enabled' => true,
-            'width' => 2,
+        $editUrl = $view->url($route->getMatchedRouteName(), [
+            'controller' => $route->getParam('controller'),
+            'action' => 'edit'
         ]);
+        $formatter = <<<FORMATTER
+function (value, options, rowObject) {
+	return '<a href="{$editUrl}/' + rowObject.user_id + '" >' + value + '</a>';
+}
+FORMATTER;
 
-        $this->add([
-            'name' => 'Select',
-            'construct' => ['role', 'role'],
-            'label' => 'Роль',
-            'identity' => false,
-            'width' => 2,
-        ]);
+        $col = new Column\Select('fio', 'user');
+        $col->setLabel('Фио');
+        $col->setTranslationEnabled();
+        $col->setWidth(2);
+        $col->setRendererParameter('formatter', $formatter, 'jqGrid');
+        $grid->addColumn($col);
+
+        $col = new Column\Select('email', 'user');
+        $col->setLabel('Email');
+        $col->setTranslationEnabled();
+        $col->setWidth(2);
+        $grid->addColumn($col);
+
+        $col = new Column\Select('role', 'role');
+        $col->setLabel('Email');
+        $col->setTranslationEnabled();
+        $col->setWidth(2);
+        $grid->addColumn($col);
 
         return $grid;
     }
 
-    /*public function initToolbar() {
+    public function initToolbar() {
         $grid = $this->getDataGrid();
         $toolbar = $this->getToolbar();
         $route = $this->getRouteMatch();
@@ -114,6 +115,6 @@ class UserGrid extends AbstractGrid implements ObjectManagerAwareInterface {
             ]], ['group' => 'prop', 'position' => 50]);
 
         return $toolbar;
-    }*/
+    }
 
 }
