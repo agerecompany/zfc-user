@@ -52,11 +52,25 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
             ],
             'attributes' => [
                 'id' => 'password',
+                'type'        => 'password',
+                'class'       => 'form-control',
+                'placeholder' => 'Password',
+                'required' => 'required'
+            ],
+        ]);
+
+        /*$this->add([
+            'name' => 'password',
+            'options' => [
+                'label' => 'Password',
+            ],
+            'attributes' => [
+                'id' => 'password',
                 'class' => 'form-control',
                 'placeholder' => 'Enter Password...',
                 'required' => 'required'
             ],
-        ]);
+        ]);*/
 
         $this->add([
             'name' => 'fio',

@@ -90,6 +90,7 @@ class UserController extends AbstractActionController {
 				$files['user']['photo']['name'] = 'photo.'.$extension;
 				$uploadFiles = $upload->receive($files['user']);
 				$user->setPhoto($uploadFiles[0]);
+				$user->setPassword($service->getHashPassword($request->getPost()['user']['password']));
 				$this->getService()->saves($user);
 
 				$msg = 'Пользователь был успешно сохранен';
