@@ -64,11 +64,6 @@ class User {
 	private $phoneInternal;
 
 	/**
-	 * @var string
-	 */
-	private $post;
-
-	/**
 	 * @var \DateTime
 	 */
 	private $dateBirth;
@@ -391,28 +386,6 @@ class User {
 	 */
 	public function getPhoneInternal() {
 		return $this->phoneInternal;
-	}
-
-	/**
-	 * Set post
-
-	 *
-	 *@param string $post
-	 * @return User
-	 */
-	public function setPost($post) {
-		$this->post = $post;
-
-		return $this;
-	}
-
-	/**
-	 * Get post
-	 *
-	 * @return string
-	 */
-	public function getPost() {
-		return $this->post;
 	}
 
 	/**

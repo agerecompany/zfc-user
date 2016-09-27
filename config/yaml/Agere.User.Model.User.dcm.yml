@@ -45,9 +45,6 @@ Agere\User\Model\User:
     phoneInternal:
       type: string
       length: 20
-    post:
-      type: string
-      length: 100
     dateBirth:
       type: date
       nullable: true

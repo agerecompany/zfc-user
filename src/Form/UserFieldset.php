@@ -146,7 +146,7 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
             ],
         ]);
 
-        $this->add([
+        /*$this->add([
             'name' => 'post',
             'options' => [
                 'label' => 'post',
@@ -156,7 +156,7 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
                 'class' => 'form-control',
                 'placeholder' => 'Enter Post..',
             ],
-        ]);
+        ]);*/
 
         /*$this->add([
             'name' => 'photo',
@@ -192,12 +192,12 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
                 ],
                 'options' => [
                     'label' => 'Дата  рождения',
-                    'format' => 'm/d/Y',
+                    'format' => 'd.m.Y',
                 ],
             ]
         );
 
-        $this->add(
+        /*$this->add(
             [
                 'name' => 'dateEmployment',
                 'type' => 'Date',
@@ -210,7 +210,7 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
                     'format' => 'm/d/Y',
                 ],
             ]
-        );
+        );*/
 
         $this->add([
             'name' => 'photo',

@@ -2,7 +2,7 @@
 /**
  * @see \TwbBundle\Form\View\Helper\TwbBundleForm
  */
-$controller = $this->current('route')->getParam('controller')
+$controller = $this->current('route')->getParam('controller');
 ?>
 <!--hardcode-->
 <!--<button title="Назад" onclick="document.location.href='/<?/*= 'user'   ;*/?>'; return false" class="btn btn-default btn-xs">Назад</button>-->
@@ -20,41 +20,52 @@ $form->prepare();
 
 ?>
 <div class="row">
-    <!-- left column -->
-    <div class="col-md-6" style="margin-left: 50px;">
-        <!-- general form elements -->
-        <div class="box box-primary">
-            <div class="box-body">
-                <?= $this->form(null, null)->openTag($form) ?>
-                <?php /** @var \Agere\User\Form\UserFieldset */ ?>
-                <?php foreach ($form->get('user') as $key => $elementOrFieldset) : ?>
-                    <?php if ($elementOrFieldset instanceof \Zend\Form\FieldsetInterface) : ?>
-                        <div class="form-group">
-                            <fieldset id="<?= $key ?>">
-                                <?php foreach ($elementOrFieldset as $subElementOrFieldset) : ?>
-                                    <div class="field-group">
-                                        <?= $this->formRow($subElementOrFieldset); ?>
-                                    </div>
-                                <?php endforeach;?>
-                            </fieldset>
-                        </div>
-                    <?php else : ?>
-                        <div class="form-group">
-                            <?= $this->formRow($elementOrFieldset); ?>
-                        </div>
-                    <?php endif; ?>
-                <?php endforeach;?>
-                <?/*= $this->formRow($form->get('photo'));*/?>
-                <!--<div class="form-element">
-                    <?php /*$fileElement = $form->get('photo'); */?>
-                    <?php /*echo $this->formLabel($fileElement); */?>
-                    <?php /*echo $this->formFile($fileElement); */?>
-                    <?php /*echo $this->formElementErrors($fileElement); */?>
-                </div>-->
-                <div class="box-footer">
-                    <?= $this->formElement($form->get('submit'))?>
+    <div class="col-md-12">
+        <div class="col-md-3">
+            <div class="user-edit-img">
+                <?php if($user->getPhoto() === null || !$user->getPhoto()) :?>
+                    <img src="/uploads/no-image.png">
+                <?php else: ?>
+                    <img src="/uploads/user/<?=$user->getId() . '/' . $user->getPhoto();?>" alt="">
+                <?php endif;?>
+            </div>
+        </div>
+        <!-- left column -->
+        <div class="col-md-6" style="margin-left: 50px;">
+            <!-- general form elements -->
+            <div class="box box-primary">
+                <div class="box-body">
+                    <?= $this->form(null, null)->openTag($form) ?>
+                    <?php /** @var \Agere\User\Form\UserFieldset */ ?>
+                    <?php foreach ($form->get('user') as $key => $elementOrFieldset) : ?>
+                        <?php if ($elementOrFieldset instanceof \Zend\Form\FieldsetInterface) : ?>
+                            <div class="form-group">
+                                <fieldset id="<?= $key ?>">
+                                    <?php foreach ($elementOrFieldset as $subElementOrFieldset) : ?>
+                                        <div class="field-group">
+                                            <?= $this->formRow($subElementOrFieldset); ?>
+                                        </div>
+                                    <?php endforeach;?>
+                                </fieldset>
+                            </div>
+                        <?php else : ?>
+                            <div class="form-group">
+                                <?= $this->formRow($elementOrFieldset); ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php endforeach;?>
+                    <?/*= $this->formRow($form->get('photo'));*/?>
+                    <!--<div class="form-element">
+                        <?php /*$fileElement = $form->get('photo'); */?>
+                        <?php /*echo $this->formLabel($fileElement); */?>
+                        <?php /*echo $this->formFile($fileElement); */?>
+                        <?php /*echo $this->formElementErrors($fileElement); */?>
+                    </div>-->
+                    <div class="box-footer">
+                        <?= $this->formElement($form->get('submit'))?>
+                    </div>
+                    <?= $this->form()->closeTag() ?>
                 </div>
-                <?= $this->form()->closeTag() ?>
             </div>
         </div>
     </div>
