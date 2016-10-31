@@ -141,6 +141,11 @@ class User {
 	private $pool;
 
 	/**
+	 * @var string
+	 */
+	private $mnemo;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -828,6 +833,25 @@ class User {
 	public function setPool($pool)
 	{
 		$this->pool = $pool;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getMnemo()
+	{
+		return $this->mnemo;
+	}
+
+	/**
+	 * @param string $mnemo
+	 * @return User
+	 */
+	public function setMnemo($mnemo)
+	{
+		$this->mnemo = $mnemo;
 
 		return $this;
 	}

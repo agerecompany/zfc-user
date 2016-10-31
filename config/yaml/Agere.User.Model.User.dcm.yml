@@ -21,6 +21,7 @@ Agere\User\Model\User:
         unsigned: true
         default: 0
         comment: Поставщик
+      nullable: true
     email:
      type: string
      length: 100
@@ -33,9 +34,11 @@ Agere\User\Model\User:
     lastName:
       type: string
       length: 30
+      nullable: true
     patronymic:
       type: string
       length: 50
+      nullable: true
     phone:
       type: string
       length: 20
@@ -74,6 +77,9 @@ Agere\User\Model\User:
       nullable: true
     remove:
       type: integer
+      nullable: true
+    mnemo:
+      type: text
       nullable: true
   manyToMany:
     #cities: # unidirectional @link http://goo.gl/xqnlAl
