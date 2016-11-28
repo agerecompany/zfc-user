@@ -742,7 +742,7 @@ class UserController extends AbstractActionController {
 						$sessionUserEmail->userEmail = $email;
 					}
 
-					$this->redirect()->toRoute('default', ['controller' => 'index', 'action' => 'index']);
+					$this->redirect()->toRoute('default', ['controller' => 'communicator', 'action' => 'index']);
 				}
 			}
 		}
