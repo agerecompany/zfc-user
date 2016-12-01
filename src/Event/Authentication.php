@@ -62,6 +62,7 @@ class Authentication
 	 * Initialization ACL resources for current user
 	 */
 	public function init() {
+
 		$this->initAcl();
 		//$this->basicAuthentication();
 	}
@@ -130,6 +131,7 @@ class Authentication
 				}
 			}
 		}
+
 		//unset($this->roles);
 		//setting to view
 		//$e->getViewModel()->acl = $this->acl;

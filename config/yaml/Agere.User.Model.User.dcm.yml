@@ -42,12 +42,15 @@ Agere\User\Model\User:
     phone:
       type: string
       length: 20
+      nullable: true
     phoneWork:
       type: string
       length: 20
+      nullable: true
     phoneInternal:
       type: string
       length: 20
+      nullable: true
     dateBirth:
       type: date
       nullable: true

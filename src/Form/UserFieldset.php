@@ -35,12 +35,12 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
         $this->add([
             'name' => 'email',
             'options' => [
-                'label' => 'Email',
+                'label' => 'Эл. Почта',
             ],
             'attributes' => [
                 'id' => 'email',
                 'class' => 'form-control',
-                'placeholder' => 'Enter Email...',
+                'placeholder' => 'Введите эл. почту ...',
                 'required' => 'required'
             ],
         ]);
@@ -48,13 +48,13 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
         $this->add([
             'name' => 'password',
             'options' => [
-                'label' => 'Password',
+                'label' => 'Пароль',
             ],
             'attributes' => [
                 'id' => 'password',
                 'type'        => 'password',
                 'class'       => 'form-control',
-                'placeholder' => 'Password',
+                'placeholder' => 'Введите пароль ... ',
                 'required' => 'required'
             ],
         ]);
@@ -75,12 +75,12 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
         $this->add([
             'name' => 'fio',
             'options' => [
-                'label' => 'FIO',
+                'label' => 'ФИО',
             ],
             'attributes' => [
                 'id' => 'fio',
                 'class' => 'form-control',
-                'placeholder' => 'Enter  FIO...',
+                'placeholder' => 'Введите ФИО ...',
                 'required' => 'required'
             ],
         ]);
@@ -113,16 +113,16 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
         $this->add([
             'name' => 'phone',
             'options' => [
-                'label' => 'phone',
+                'label' => 'Телефон',
             ],
             'attributes' => [
                 'id' => 'phone',
                 'class' => 'form-control',
-                'placeholder' => 'Enter phone..',
+                'placeholder' => 'Введите телефон..',
             ],
         ]);
 
-        $this->add([
+        /*$this->add([
             'name' => 'phoneWork',
             'options' => [
                 'label' => 'phoneWork',
@@ -132,9 +132,9 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
                 'class' => 'form-control',
                 'placeholder' => 'Enter phoneWork..',
             ],
-        ]);
+        ]);*/
 
-        $this->add([
+        /*$this->add([
             'name' => 'phoneInternal',
             'options' => [
                 'label' => 'phoneInternal',
@@ -144,7 +144,7 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
                 'class' => 'form-control',
                 'placeholder' => 'Enter phoneInternal..',
             ],
-        ]);
+        ]);*/
 
         /*$this->add([
             'name' => 'post',
@@ -191,7 +191,7 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
                     'class' => 'datepicker',
                 ],
                 'options' => [
-                    'label' => 'Дата  рождения',
+                    'label' => 'Дата рождения',
                     'format' => 'd.m.Y',
                 ],
             ]
@@ -362,52 +362,10 @@ class UserFieldset extends Fieldset implements InputFilterProviderInterface, Obj
     public function getInputFilterSpecification()
     {
         return [
-            'email' => [
-                'required' => true,
-                'filters' => [
-                    ['name' => 'StripTags'],
-                    ['name' => 'StringTrim'],
-                ],
+            'dateBirth' => [
+                'required' => false,
             ],
 
-            /*'photo' => [
-                'required' => false,
-                'validators' => array (
-                    array (
-                        'name' => 'filesize',
-                        'options' => array (
-                            'max' => 2097152, // 2 MB
-                        ),
-                    ),
-                    array (
-                        'name' => 'filemimetype',
-                        'options' => array (
-                            'mimeType' => 'image/png,image/x-png,image/jpg,image/jpeg,image/gif',
-                        )
-                    ),
-                    array (
-                        'name' => 'fileimagesize',
-                        'options' => array (
-                            'maxWidth' => 5,
-                            'maxHeight' => 5
-                        )
-                    ),
-                ),
-                'filters' => array (
-                    // the filter below will save the uploaded file under
-                    // <app-path>/data/images/photos/<tmp_name>_<random-data>
-                    array (
-                        'name'    => 'filerenameupload',
-                        'options' => array (
-                            // Notice: Make sure that the folder below is existing on your system
-                            //         otherwise this filter will not pass and you will get strange
-                            //         error message reporting that the required field is empty
-                            'target'    => 'data/image/photos/',
-                            'randomize' => true,
-                        ),
-                    ),
-                ),
-            ],*/
         ];
     }
 }

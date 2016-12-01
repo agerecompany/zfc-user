@@ -16,9 +16,19 @@ class UserControllerFactory
     public function __invoke($cm)
     {
         $sm = $cm->getServiceLocator();
+
         $controller = new UserController();
         $controller->setServiceManager($sm);
 
+        /* Отримуємо плагін*/
+        $userPlugin= $sm->get('ControllerPluginManager')->get('user');
+        /* Отримуємо поточного користувача*/
+        if ($user = $userPlugin->current()) {
+            /* Отримуємо Pool */
+            $pool = $user->getPool();
+            /* Робимо ін'єкцію у контролер*/
+            $controller->setPool($pool);
+        }
         return $controller;
     }
 }

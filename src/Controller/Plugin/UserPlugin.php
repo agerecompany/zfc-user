@@ -105,12 +105,12 @@ class UserPlugin extends AbstractPlugin {
      */
 	public function current() {
 		static $user;
-
-		if (!$user) {
-			$currentUser = $this->getAuthService()->getIdentity();
-            //\Zend\Debug\Debug::dump($currentUser); die(__METHOD__);
+		if (!$user && $currentUser = $this->getAuthService()->getIdentity()) {
+			//if ($currentUser = $this->getAuthService()->getIdentity()) {
+				$user = $this->getUserService()->find($currentUser->getId());
+			//}
+			//\Zend\Debug\Debug::dump($currentUser); die(__METHOD__);
 			//$user = $this->getUserService()->find($currentUser['id']);
-            $user = $this->getUserService()->find($currentUser->getId());
         }
 
 		return $user;

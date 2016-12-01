@@ -24,7 +24,7 @@ class UserForm extends Form
             'name' => 'submit',
             'attributes' => [
                 'type' => 'submit',
-                'value' => 'Send',
+                'value' => 'Сохранить',
                 'class' => 'btn btn-primary',
             ],
         ]);

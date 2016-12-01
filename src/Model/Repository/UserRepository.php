@@ -21,7 +21,19 @@ class UserRepository extends EntityRepository {
 		$alias = 'user';
 		$qb = $this->createQueryBuilder($alias)
 			->leftJoin($alias . '.roles', 'role')
+			->orderBy($alias . '.fio', 'ASC')
 		;
+
+		return $qb;
+	}
+
+	public function getUsersByPool($pool)
+	{
+		$alias = 'user';
+		$qb = $this->getUsers();
+		$qb->where($qb->expr()->in($alias . '.pool', '?1'));
+		$qb->setParameter(1, $pool);
+
 		return $qb;
 	}
 

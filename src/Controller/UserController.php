@@ -21,11 +21,14 @@ use Agere\Core\Controller\DeleteActionAwareTrait;
 use Agere\File\Transfer\Adapter\Http;
 use Agere\Material\Block\Grid\MaterialGrid;
 use Agere\Material\Form\MaterialForm;
+use Agere\Core\Service\PoolAwareTrait;
+
 
 
 class UserController extends AbstractActionController {
 
 	use ServiceManagerAwareTrait;
+	use PoolAwareTrait;
 
 	use DeleteActionAwareTrait;
 
@@ -42,7 +45,8 @@ class UserController extends AbstractActionController {
 	{
 		$sm = $this->getServiceManager();
 		//$users = $this->getService()->getRepository()->findByRoles(1);
-		$users = $this->getService()->getRepository()->getUsers();
+		$pool = $this->getPool();
+		$users = $this->getService()->getRepository()->getUsersByPool($pool->getId());
 		/** @var UserGrid $userGrid */
 		$userGrid = $sm->get('UserGrid');
 		$userDataGrid = $userGrid->getDataGrid();
@@ -70,6 +74,8 @@ class UserController extends AbstractActionController {
 		$user = ($user = $service->find($id = (int) $route->getParam('id')))
 			? $user
 			: $service->getObjectModel();
+
+		$user->setPool($this->getPool());
 
 		/** @var UserForm $form */
 		$form = $fm->get(UserForm::class);
